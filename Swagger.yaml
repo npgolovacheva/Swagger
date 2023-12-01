@@ -1,0 +1,824 @@
+openapi: 3.0.0
+info:
+  title: Система проведения стажировок
+  description: API для управления системой проведения стажировок
+  version: 1.0.0
+paths:
+
+  /public/internship:
+    get:
+      tags:
+        - Стажировка
+      summary: Вывод списка стажировок в публичном модуле
+      description: Вывод стажировок со статусом 'RECRUITMENT'
+      responses:
+        '200':
+          description: Список стажировок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PublicInternship1'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /public/internship/{id}:
+    get:
+      tags:
+        - Стажировка
+      summary: Получение информации о стажировке
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор стажировки
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicInternship2'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /public/internship/{id}/additionalFields:
+    get:
+      tags:
+        - Стажировка
+      summary: Получение дополнительных полей для заполнения формы заявки
+      description: Получение дополнительных полей информации о Стажёре в форме заявки на участие в стажировке, если таковые были заданы Администратором при создании стажировки
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор стажировки
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Дополнительные поля успешно получены
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  description: Добавление дополнительных полей в форму заявки
+                  default: Образование (ВУЗ)
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /public/intern:
+    post:
+      tags:
+        - Стажёры
+      summary: Создать заявку на участие в стажировке
+      description: Отправить заполненную потенциальным Стажёром заявку на участие в стажировке
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicIntern'
+      responses:
+        '200':
+          description: Успешное создание стажировки
+        '400':
+          description: Некорректный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+
+
+  /internship:
+    post:
+      tags:
+        - Стажировка
+      summary: Создание стажировки
+      description: Создание новой стажировки
+      security:
+        - Authorization: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Internship'
+      responses:
+        '200':
+          description: Успешное создание стажировки
+        '400':
+          description: Некорректный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+
+    get:
+      tags:
+        - Стажировка
+      summary: Вывод всех стажировок
+      description: Вывод всех имеющихся в контуре Лиги стажировок ('RECRUITMENT'/'ACTIVE'/'СOMPLETED')
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: Список стажировок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Internship'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /internship/completed/{id}:
+    put:
+      tags:
+        - Стажировка
+      summary: Направить стажировку в архив
+      description: Обновить статус стажировки после её окончания
+      security:
+        - Authorization: []
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор стажировки
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Стажировка направлена в архив
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /intern/{id}:
+    get:
+      tags:
+        - Стажёры
+      summary: Получить информацию о Стажёре
+      security:
+        - Authorization: []
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор Стажёра
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Intern'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /intern/status/{status}:
+    get:
+      tags:
+        - Стажёры
+      summary: Получить список Стажёров с определённым статусом
+      security:
+        - Authorization: []
+      parameters:
+        - name: status
+          in: path
+          description: Статус Стажёра
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StatusIntern'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /intern/{id}/sb/check:
+    post:
+      tags:
+        - Стажёры
+      summary: Передать данные Стажёра на проверку в Службу безопасности
+      security:
+        - Authorization: []
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор Стажёра
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Данные Стажёра успешно переданы на проверку в Службу безопасности
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /intern/{id}/account:
+    post:
+      tags:
+        - Стажёры
+      summary: Создать Стажёру учётную запись
+      security:
+        - Authorization: []
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор Стажёра
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Учётная запись Стажёра успешно создана
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Статус выполнения регистрации Стажёра
+                    default: success
+                  description:
+                    type: string
+                    description: Результат регистрации Стажёра
+                    default: Регистрация выполнена успешно
+        '400':
+          description: Ошибка в синтаксисе запроса
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Ошибка
+                    default: error_code
+                  error_description:
+                    type: string
+                    description: Описание ошибки
+                    default: Description of the error code
+
+  /intern/{id}/employment:
+    post:
+      tags:
+        - Стажёры
+      summary: Передать данные Стажёра в работу HR
+      security:
+        - Authorization: []
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор Стажёра
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Данные Стажёра успешно переданы
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Данные Стажёра успешно переданы
+                    default: success
+        '400':
+          description: Ошибка в синтаксисе запроса
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Ошибка
+                    default: unsuccess
+
+
+  /user/auth:
+    post:
+      tags:
+        - Пользователи
+      summary: Получение токена авторизации
+      description: Авторизация, вход в личный кабинет
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: integer
+                  description: Логин
+                  default: 78005553535
+                password:
+                  type: string
+                  description: Пароль
+                  default: 123abc
+      responses:
+        '200':
+          description: Учётная запись Стажёра успешно создана
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Токен
+                    default: token
+                  expires_in:
+                    type: integer
+                    description: Истекает
+                    default: 86400
+                  token_type:
+                    type: string
+                    description: Тип авторизационного токена
+                    default: bearer
+        '400':
+          description: Ошибка в синтаксисе запроса
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Ошибка 400
+                    default: error_code
+                  error_description:
+                    type: string
+                    description: Описание кода ошибки
+                    default: Description of the error code
+        '401':
+          description: Проблема с авторизацией на сайте
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Ошибка 401
+                    default: 401
+                  error_description:
+                    type: string
+                    description: Описание кода ошибки
+                    default: password is incorrect
+
+  /lecture:
+    post:
+      tags:
+        - Лекции
+      summary: Создание лекции
+      description: Создание новой лекции
+      security:
+        - Authorization: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lecture1'
+      responses:
+        '200':
+          description: Успешное создание лекции
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /lecture/{lectureId}:
+    get:
+      tags:
+        - Лекции
+      summary: Получить информацию о лекции
+      security:
+        - Authorization: []
+      parameters:
+        - name: lectureId
+          in: path
+          description: Идентификатор лекции
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lecture2'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /lecture/{lectureId}/materials:
+    put:
+      tags:
+        - Лекции
+      summary: Приложить материалы к лекции
+      description: Приложить материалы к лекции
+      security:
+        - Authorization: []
+      parameters:
+        - name: lectureId
+          in: path
+          description: Идентификатор лекции
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                description: Ссылка на материал к лекции
+                default: yandex.disc/presentation
+
+      responses:
+        '200':
+          description: Материалы к лекции успешно добавлены
+        '500':
+          description: Внутренняя ошибка сервера
+
+
+components:
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    PublicInternship1:
+      type: object
+
+      required:
+        - id
+        - name
+        - description
+
+      properties:
+        id:
+          type: integer
+          description: Идентификатор стажировки
+          default: 3
+        name:
+          type: string
+          description: Название стажировки
+          default: Системный анализ
+        description:
+          type: string
+          description: Описание стажировки
+          default: Стажировка по системному анализу
+
+    PublicInternship2:
+      type: object
+
+      required:
+        - id
+        - name
+        - description
+        - internshipProgram
+        - testTask
+
+      properties:
+        id:
+          type: integer
+          description: Идентификатор стажировки
+          default: 3
+        name:
+          type: string
+          description: Название стажировки
+          default: Системный анализ
+        description:
+          type: string
+          description: Описание стажировки
+          default: Стажировка по системному анализу
+        internshipProgram:
+          type: string
+          description: Программа стажировки
+          default: Текст программы стажировки
+        testTask:
+          type: string
+          description: Тестовое задание
+          default: Текст тестового задания
+
+    Internship:
+      type: object
+
+      required:
+        - id
+        - name
+        - description
+        - managerId
+        - testTask
+        - internshipProgram
+        - additionalFields
+
+      properties:
+        id:
+          type: integer
+          description: Идентификатор стажировки
+          default: 3
+        name:
+          type: string
+          description: Название стажировки
+          default: Системный анализ
+        description:
+          type: string
+          description: Описание стажировки
+          default: Стажировка по системному анализу
+        managerId:
+          type: integer
+          description: Идентификатор Ментора
+          default: 2
+        testTask:
+          type: string
+          description: Тестовое задание
+          default: Текст тестового задания
+        internshipProgram:
+          type: string
+          description: Программа стажировки
+          default: Текст программы стажировки
+        additionalFields:
+          type: array
+          items:
+            type: string
+            description: Добавление дополнительных полей в форму заявки
+            default: Образование (ВУЗ)
+
+
+    PublicIntern:
+      type: object
+
+      required:
+        - internshipId
+        - surname
+        - name
+        - middleName
+        - address
+        - birthDate
+        - phoneNumber
+        - email
+        - completedTestTaskLink
+        - additionalFields
+          - name
+          - meaning
+
+      properties:
+        internshipId:
+          type: integer
+          description: Идентификатор стажировки
+          default: 3
+        surname:
+          type: string
+          description: Фамилия Стажёра
+          default: Перельман
+        name:
+          type: string
+          description: Имя Стажёра
+          default: Грирогий
+        middleNname:
+          type: string
+          description: Отчество Стажёра
+          default: Яковлевич
+        address:
+          type: string
+          description: Адрес прописки Стажёра
+          default: Санкт-Петербург
+        birthDate:
+          type: string
+          description: Дата рождения Стажёра
+          default: "1966-06-13"
+        phoneNumber:
+          type: integer
+          description: Номер телефона Стажёра
+          default: 78005553535
+        email:
+          type: string
+          description: Почта Стажёра
+          default: gperelman@mail.ru
+        completedTestTaskLink:
+          type: string
+          description: Ссылка на выполненное тестовое задание
+          default: ссылка
+        additionalFields:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                description: Добавление дополнительных полей в форму заявки
+                default: Образование (ВУЗ)
+              meaning:
+                description: Дополнительная информация
+                default: ЛГУ (матмех)
+
+    Intern:
+      type: object
+
+      required:
+        - id
+        - surname
+        - name
+        - middleName
+        - internshipIds
+        - status
+        - address
+        - birthDate
+        - phoneNumber
+        - email
+        - completedTestTaskLink
+        - statusSb
+        - descriptionSb
+        - additionalFields
+          - name
+          - meaning
+
+      properties:
+        id:
+          type: integer
+          description: Идентификатор Стажёра
+          default: 16
+        surname:
+          type: string
+          description: Фамилия Стажёра
+          default: Перельман
+        name:
+          type: string
+          description: Имя Стажёра
+          default: Грирогий
+        middleNname:
+          type: string
+          description: Отчество Стажёра
+          default: Яковлевич
+        internshipIds:
+          type: array
+          items:
+            type: integer
+            description: Идентификатор стажировки
+            default: 3
+        status:
+          type: string
+          description: Статус Стажёра
+          default: ENROLLED
+        address:
+          type: string
+          description: Адрес прописки Стажёра
+          default: Санкт-Петербург
+        birthDate:
+          type: string
+          description: Дата рождения Стажёра
+          default: "1966-06-13"
+        phoneNumber:
+          type: integer
+          description: Номер телефона Стажёра
+          default: 78005553535
+        email:
+          type: string
+          description: Почта Стажёра
+          default: gperelman@mail.ru
+        completedTestTaskLink:
+          type: string
+          description: Ссылка на выполненное тестовое задание
+          default: ссылка
+        statusSb:
+          type: string
+          description: Результат проверки Стажёра Службой безопасности
+          default: approved
+        descriptionSb:
+          type: string
+          description: Комментарий от Cлужбы безопасности
+          default: "Всё хорошо, вопросов не имеется"
+        additionalFields:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                description: Добавление дополнительных полей в форму заявки
+                default: Образование (ВУЗ)
+              meaning:
+                description: Дополнительная информация
+                default: ЛГУ (матмех)
+
+    StatusIntern:
+      type: object
+
+      required:
+        - surname
+        - name
+        - middleName
+        - status
+
+      properties:
+        surname:
+          type: string
+          description: Фамилия Стажёра
+          default: Перельман
+        name:
+          type: string
+          description: Имя Стажёра
+          default: Грирогий
+        middleNname:
+          type: string
+          description: Отчество Стажёра
+          default: Яковлевич
+        status:
+          type: string
+          description: Статус Стажёра
+          default: ENROLLED
+
+    Lecture1:
+      type: object
+
+      required:
+        - internshipId
+        - managerId
+        - name
+        - dateTime
+        - meeting_location
+
+      properties:
+        internshipId:
+          type: integer
+          description: Идентификатор лекции
+          default: 26
+        managerId:
+          type: integer
+          description: Идентификатор Ментора
+          default: 2
+        name:
+          type: string
+          description: Название лекции
+          default: Нотации BPMN, UML
+        dateTime:
+          type: string
+          description: Дата и время проведения лекции
+          default: "2024-10-10T18:00:00"
+        meeting_location:
+          type: string
+          description: Место проведения встречи (ссылка)
+          default: Ссылка
+
+    Lecture2:
+      type: object
+
+      required:
+        - lectureId
+        - internshipId
+        - managerId
+        - name
+        - dateTime
+        - meeting_location
+        - materials
+
+      properties:
+        lectureId:
+          type: integer
+          description: Идентификатор лекции
+          default: 26
+        internshipId:
+          type: integer
+          description: Идентификатор стажировки
+          default: 3
+        managerId:
+          type: integer
+          description: Идентификатор Ментора
+          default: 2
+        name:
+          type: string
+          description: Название лекции
+          default: Нотации BPMN, UML
+        dateTime:
+          type: string
+          description: Дата и время проведения лекции
+          default: "2024-10-10T18:00:00"
+        meeting_location:
+          type: string
+          description: Место проведения встречи (ссылка)
+          default: Ссылка
+        materials:
+          type: array
+          items:
+            type: string
+            description: Ссылки на материалы к лекции
+            default: yandex.disc/presentation
