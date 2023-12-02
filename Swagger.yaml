@@ -470,11 +470,6 @@ components:
     PublicInternship1:
       type: object
 
-      required:
-        - id
-        - name
-        - description
-
       properties:
         id:
           type: integer
@@ -491,13 +486,6 @@ components:
 
     PublicInternship2:
       type: object
-
-      required:
-        - id
-        - name
-        - description
-        - internshipProgram
-        - testTask
 
       properties:
         id:
@@ -523,15 +511,6 @@ components:
 
     Internship:
       type: object
-
-      required:
-        - id
-        - name
-        - description
-        - managerId
-        - testTask
-        - internshipProgram
-        - additionalFields
 
       properties:
         id:
@@ -568,20 +547,6 @@ components:
 
     PublicIntern:
       type: object
-
-      required:
-        - internshipId
-        - surname
-        - name
-        - middleName
-        - address
-        - birthDate
-        - phoneNumber
-        - email
-        - completedTestTaskLink
-        - additionalFields
-          - name
-          - meaning
 
       properties:
         internshipId:
@@ -635,24 +600,6 @@ components:
     Intern:
       type: object
 
-      required:
-        - id
-        - surname
-        - name
-        - middleName
-        - internshipIds
-        - status
-        - address
-        - birthDate
-        - phoneNumber
-        - email
-        - completedTestTaskLink
-        - statusSb
-        - descriptionSb
-        - additionalFields
-          - name
-          - meaning
-
       properties:
         id:
           type: integer
@@ -670,12 +617,21 @@ components:
           type: string
           description: Отчество Стажёра
           default: Яковлевич
-        internshipIds:
+        internships:
           type: array
           items:
-            type: integer
-            description: Идентификатор стажировки
-            default: 3
+            type: object
+            properties:
+              internshipId:
+                description: Идентификатор стажировки
+                default: 3
+              internshipName:
+                description: Название стажировки
+                default: Системный анализ
+        managerId:
+          type: integer
+          description: Идентификатор Ментора
+          default: 2
         status:
           type: string
           description: Статус Стажёра
@@ -707,7 +663,7 @@ components:
         descriptionSb:
           type: string
           description: Комментарий от Cлужбы безопасности
-          default: "Всё хорошо, вопросов не имеется"
+          default: Всё хорошо, вопросов не имеется
         additionalFields:
           type: array
           items:
@@ -719,15 +675,44 @@ components:
               meaning:
                 description: Дополнительная информация
                 default: ЛГУ (матмех)
+        homeworks:
+          type: array
+          items:
+            type: object
+            properties:
+              homeworkId:
+                type: integer
+                description: Идентификатор стажировки
+                default: 4
+              homeworkTask:
+                type: string
+                description: Текст домашнего задания
+                default: Текст домашнего задания
+              homeworkLinks:
+                type: array
+                items:
+                  type: object
+                  description: Приложения к домашнему заданию
+                  default: https://disk.yandex/presentation2
+              completedHomeworkLink:
+                type: string
+                description: Ссылка на выполненное домашнее задание
+                default: Ссылка
+              homeworStatus:
+                type: string
+                description: Статус выполнения домашнего задания
+                default: Выполнено
+              grade:
+                type: integer
+                description: Оценка за домашнее задание
+                default: 5
+              note:
+                type: string
+                description: Комментарий Ментора по домашнему заданию
+                default: Всё решено корректно
 
     StatusIntern:
       type: object
-
-      required:
-        - surname
-        - name
-        - middleName
-        - status
 
       properties:
         surname:
@@ -749,13 +734,6 @@ components:
 
     Lecture1:
       type: object
-
-      required:
-        - internshipId
-        - managerId
-        - name
-        - dateTime
-        - meeting_location
 
       properties:
         internshipId:
@@ -781,15 +759,6 @@ components:
 
     Lecture2:
       type: object
-
-      required:
-        - lectureId
-        - internshipId
-        - managerId
-        - name
-        - dateTime
-        - meeting_location
-        - materials
 
       properties:
         lectureId:
@@ -821,4 +790,4 @@ components:
           items:
             type: string
             description: Ссылки на материалы к лекции
-            default: yandex.disc/presentation
+            default: https://disk.yandex/presentation
