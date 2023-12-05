@@ -9,11 +9,11 @@ paths:
     get:
       tags:
         - Стажировка
-      summary: Вывод списка стажировок в публичном модуле
+      summary: Получить список стажировок, на которые осуществляется набор
       description: Вывод стажировок со статусом 'RECRUITMENT'
       responses:
         '200':
-          description: Список стажировок
+          description: Успешный запрос
           content:
             application/json:
               schema:
@@ -27,7 +27,7 @@ paths:
     get:
       tags:
         - Стажировка
-      summary: Получение информации о стажировке
+      summary: Получить подробную информацию о стажировке, на которую осуществляется набор
       parameters:
         - name: id
           in: path
@@ -49,7 +49,7 @@ paths:
     get:
       tags:
         - Стажировка
-      summary: Получение дополнительных полей для заполнения формы заявки
+      summary: Получить дополнительные поля для заполнения формы заявки на участие в стажировк
       description: Получение дополнительных полей информации о Стажёре в форме заявки на участие в стажировке, если таковые были заданы Администратором при создании стажировки
       parameters:
         - name: id
@@ -60,7 +60,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Дополнительные поля успешно получены
+          description: Успешный запрос
           content:
             application/json:
               schema:
@@ -86,7 +86,7 @@ paths:
               $ref: '#/components/schemas/PublicIntern'
       responses:
         '200':
-          description: Успешное создание стажировки
+          description: Успешный запрос
         '400':
           description: Некорректный запрос
         '500':
@@ -97,7 +97,7 @@ paths:
     post:
       tags:
         - Стажировка
-      summary: Создание стажировки
+      summary: Создать стажировку
       description: Создание новой стажировки
       security:
         - Authorization: []
@@ -106,10 +106,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Internship'
+              $ref: '#/components/schemas/Internship1'
       responses:
         '200':
-          description: Успешное создание стажировки
+          description: Успешный запрос
         '400':
           description: Некорректный запрос
         '500':
@@ -118,21 +118,47 @@ paths:
     get:
       tags:
         - Стажировка
-      summary: Вывод всех стажировок
-      description: Вывод всех имеющихся в контуре Лиги стажировок ('RECRUITMENT'/'ACTIVE'/'СOMPLETED')
+      summary: Получить список всех стажировок
+      description: Вывод списка всех имеющихся в контуре Лиги стажировок ('RECRUITMENT'/'ACTIVE'/'СOMPLETED')
       security:
         - Authorization: []
       responses:
         '200':
-          description: Список стажировок
+          description: Успешный запрос
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Internship'
+                  $ref: '#/components/schemas/Internship2'
         '500':
           description: Внутренняя ошибка сервера
+
+  /internship/{id}:
+    get:
+      tags:
+        - Стажировка
+      summary: Получить подробную информацию по конкретной стажировке
+      description: Получить информацию по конкретной стажировке
+      security:
+        - Authorization: []
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор стажировки
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Internship3'
+        '500':
+          description: Внутренняя ошибка сервера
+
 
   /internship/completed/{id}:
     put:
@@ -151,7 +177,7 @@ paths:
             type: integer
       responses:
         '200':
-          description: Стажировка направлена в архив
+          description: Успешный запрос
         '500':
           description: Внутренняя ошибка сервера
 
@@ -205,6 +231,27 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
+  /intern/{id}/enroll:
+    put:
+      tags:
+        - Стажёры
+      summary: Зачислить на стажировку
+      description: Руководитель стажировки принимает решение о зачислении Стажёра на стажировку после проверки тестового задания
+      security:
+        - Authorization: []
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор Стажёра
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+
   /intern/{id}/sb/check:
     post:
       tags:
@@ -221,7 +268,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Данные Стажёра успешно переданы на проверку в Службу безопасности
+          description: Успешный запрос
         '500':
           description: Внутренняя ошибка сервера
 
@@ -241,7 +288,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Учётная запись Стажёра успешно создана
+          description: Успешный запрос
           content:
             application/json:
               schema:
@@ -287,7 +334,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Данные Стажёра успешно переданы
+          description: Успешный запрос
           content:
             application/json:
               schema:
@@ -308,7 +355,6 @@ paths:
                     type: string
                     description: Ошибка
                     default: unsuccess
-
 
   /user/auth:
     post:
@@ -333,7 +379,7 @@ paths:
                   default: 123abc
       responses:
         '200':
-          description: Учётная запись Стажёра успешно создана
+          description: Успешный запрос
           content:
             application/json:
               schema:
@@ -382,14 +428,132 @@ paths:
                     description: Описание кода ошибки
                     default: password is incorrect
 
-  /lecture:
+  /internship/{internshipId}/intern:
+    get:
+      tags:
+        - Стажировка
+      summary: Получить список Стажёров с определённой стажировки
+      security:
+        - Authorization: []
+      parameters:
+        - name: internshipId
+          in: path
+          description: Идентификатор стажировки
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Идентификатор Стажёра
+                      default: 16
+                    surname:
+                      type: string
+                      description: Фамилия Стажёра
+                      default: Перельман
+                    name:
+                      type: string
+                      description: Имя Стажёра
+                      default: Григорий
+                    middleNname:
+                      type: string
+                      description: Отчество Стажёра
+                      default: Яковлевич
+                    status:
+                      type: string
+                      description: Статус Стажёра
+                      default: STUDIES
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /manager/mentor:
+    post:
+      tags:
+        - Руководящий персонал
+      summary: Назначить сотрудника Лиги на роль Ментора
+      security:
+        - Authorization: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Manager1'
+      responses:
+        '200':
+          description: Успешный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /internship/{internshipId}/manager/mentor:
+    get:
+      tags:
+        - Руководящий персонал
+      summary: Получить список Менторов
+      security:
+        - Authorization: []
+      parameters:
+        - name: internshipId
+          in: path
+          description: Идентификатор стажировки
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Manager2'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /manager/internship:
+    get:
+      tags:
+        - Стажировка
+      summary: Получить список стажировок определённого Руководителя стажировки
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Internship4'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /internship/{internshipId}/lecture:
     post:
       tags:
         - Лекции
-      summary: Создание лекции
+      summary: Создать лекцию
       description: Создание новой лекции
       security:
         - Authorization: []
+      parameters:
+        - name: internshipId
+          in: path
+          description: Идентификатор стажировки
+          required: true
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
@@ -398,9 +562,36 @@ paths:
               $ref: '#/components/schemas/Lecture1'
       responses:
         '200':
-          description: Успешное создание лекции
+          description: Успешный запрос
         '500':
           description: Внутренняя ошибка сервера
+    get:
+      tags:
+        - Лекции
+      summary: Получить список лекций стажировки
+      description: Вывод списка всех лекций стажировки
+      security:
+        - Authorization: []
+      parameters:
+        - name: internshipId
+          in: path
+          description: Идентификатор стажировки
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lecture2'
+        '500':
+          description: Внутренняя ошибка сервера
+
+
 
   /lecture/{lectureId}:
     get:
@@ -422,7 +613,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Lecture2'
+                $ref: '#/components/schemas/Lecture3'
         '500':
           description: Внутренняя ошибка сервера
 
@@ -450,13 +641,35 @@ paths:
               items:
                 type: string
                 description: Ссылка на материал к лекции
-                default: yandex.disc/presentation
+                default: https://disk.yandex/presentation
 
       responses:
         '200':
-          description: Материалы к лекции успешно добавлены
+          description: Успешный запрос
         '500':
           description: Внутренняя ошибка сервера
+
+  /liga/users:
+    get:
+      tags:
+        - Пользователи
+      summary: Получить всех сотрудников Лиги
+      description: Вывод всех сотрудников Лиги
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users'
+        '500':
+          description: Внутренняя ошибка сервера
+
+
 
 
 components:
@@ -509,7 +722,129 @@ components:
           description: Тестовое задание
           default: Текст тестового задания
 
-    Internship:
+    Internship1:
+      type: object
+
+      properties:
+        name:
+          type: string
+          description: Название стажировки
+          default: Системный анализ
+        description:
+          type: string
+          description: Описание стажировки
+          default: Стажировка по системному анализу
+        testTask:
+          type: string
+          description: Тестовое задание
+          default: Текст тестового задания
+        internshipProgram:
+          type: string
+          description: Программа стажировки
+          default: Текст программы стажировки
+        additionalFields:
+          type: array
+          items:
+            type: string
+            description: Добавление дополнительных полей в форму заявки
+            default: Образование (ВУЗ)
+        manager:
+          type: object
+          properties:
+            internshipId:
+              type: integer
+              description: Идентификатор стажировки
+              default: 2
+            surname:
+              type: string
+              description: Фамилия сотрудника
+              default: Ящук
+            name:
+              type: string
+              description: Имя сотрудника
+              default: Юлия
+            middleNname:
+              type: string
+              description: Отчество сотрудника
+              default: Игоревна
+
+    Internship2:
+      type: object
+
+      properties:
+        id:
+          type: integer
+          description: Идентификатор стажировки
+          default: 3
+        name:
+          type: string
+          description: Название стажировки
+          default: Системный анализ
+        managerInfo:
+          type: object
+          properties:
+            surname:
+              type: string
+              description: Фамилия Руководителя стажировки
+              default: Ящук
+            name:
+              type: string
+              description: Имя Руководителя стажировки
+              default: Юлия
+            middleNname:
+              type: string
+              description: Отчество Руководителя стажировки
+              default: Игоревна
+        status:
+          type: string
+          description: Статус стажировки
+          default: Активная стажировка
+
+    Internship3:
+      type: object
+
+      properties:
+        internshipId:
+          type: integer
+          description: Идентификатор стажировки
+          default: 3
+        name:
+          type: string
+          description: Название стажировки
+          default: Системный анализ
+        description:
+          type: string
+          description: Описание стажировки
+          default: Стажировка по системному анализу
+        internshipProgram:
+          type: string
+          description: Программа стажировки
+          default: Текст программы стажировки
+        testTask:
+          type: string
+          description: Тестовое задание
+          default: Текст тестового задания
+        managerInfo:
+          type: object
+          properties:
+            surname:
+              type: string
+              description: Фамилия Руководителя стажировки
+              default: Ящук
+            name:
+              type: string
+              description: Имя Руководителя стажировки
+              default: Юлия
+            middleNname:
+              type: string
+              description: Отчество Руководителя стажировки
+              default: Игоревна
+        status:
+          type: string
+          description: Статус стажировки
+          default: Активная стажировка
+
+    Internship4:
       type: object
 
       properties:
@@ -525,25 +860,10 @@ components:
           type: string
           description: Описание стажировки
           default: Стажировка по системному анализу
-        managerId:
-          type: integer
-          description: Идентификатор Ментора
-          default: 2
-        testTask:
+        status:
           type: string
-          description: Тестовое задание
-          default: Текст тестового задания
-        internshipProgram:
-          type: string
-          description: Программа стажировки
-          default: Текст программы стажировки
-        additionalFields:
-          type: array
-          items:
-            type: string
-            description: Добавление дополнительных полей в форму заявки
-            default: Образование (ВУЗ)
-
+          description: Статус стажировки
+          default: Активная стажировка
 
     PublicIntern:
       type: object
@@ -560,7 +880,7 @@ components:
         name:
           type: string
           description: Имя Стажёра
-          default: Грирогий
+          default: Григорий
         middleNname:
           type: string
           description: Отчество Стажёра
@@ -612,7 +932,7 @@ components:
         name:
           type: string
           description: Имя Стажёра
-          default: Грирогий
+          default: Григорий
         middleNname:
           type: string
           description: Отчество Стажёра
@@ -623,19 +943,36 @@ components:
             type: object
             properties:
               internshipId:
+                type: integer
                 description: Идентификатор стажировки
                 default: 3
               internshipName:
+                type: string
                 description: Название стажировки
                 default: Системный анализ
-        managerId:
-          type: integer
-          description: Идентификатор Ментора
-          default: 2
+        managerInfo:
+          type: object
+          properties:
+            managerId:
+              type: integer
+              description: Идентификатор Ментора
+              default: 5
+            surname:
+              type: string
+              description: Фамилия Ментора
+              default: Жданов
+            name:
+              type: string
+              description: Имя Ментора
+              default: Александр
+            middleNname:
+              type: string
+              description: Отчество Ментора
+              default: Константинович
         status:
           type: string
           description: Статус Стажёра
-          default: ENROLLED
+          default: STUDIES
         address:
           type: string
           description: Адрес прописки Стажёра
@@ -675,6 +1012,10 @@ components:
               meaning:
                 description: Дополнительная информация
                 default: ЛГУ (матмех)
+        mentorOpinion:
+          type: string
+          description: Заключение Ментора о Стажёре по итогам стажировки
+          default: Заключение Ментора о Стажёре по итогам стажировки
         homeworks:
           type: array
           items:
@@ -698,7 +1039,7 @@ components:
                 type: string
                 description: Ссылка на выполненное домашнее задание
                 default: Ссылка
-              homeworStatus:
+              homeworkStatus:
                 type: string
                 description: Статус выполнения домашнего задания
                 default: Выполнено
@@ -722,7 +1063,7 @@ components:
         name:
           type: string
           description: Имя Стажёра
-          default: Грирогий
+          default: Григорий
         middleNname:
           type: string
           description: Отчество Стажёра
@@ -732,18 +1073,56 @@ components:
           description: Статус Стажёра
           default: ENROLLED
 
-    Lecture1:
+    Manager1:
       type: object
 
       properties:
         internshipId:
           type: integer
-          description: Идентификатор лекции
-          default: 26
+          description: Идентификатор стажировки
+          default: 3
+        surname:
+          type: string
+          description: Фамилия Ментора
+          default: Жданов
+        name:
+          type: string
+          description: Имя Ментора
+          default: Александр
+        middleNname:
+          type: string
+          description: Отчество Ментора
+          default: Константинович
+
+    Manager2:
+      type: object
+
+      properties:
         managerId:
           type: integer
           description: Идентификатор Ментора
-          default: 2
+          default: 5
+        surname:
+          type: string
+          description: Фамилия Ментора
+          default: Жданов
+        name:
+          type: string
+          description: Имя Ментора
+          default: Александр
+        middleNname:
+          type: string
+          description: Отчество Ментора
+          default: Константинович
+
+    Lecture1:
+      type: object
+
+      properties:
+        managerId:
+          type: integer
+          description: Идентификатор Ментора
+          default: 5
         name:
           type: string
           description: Название лекции
@@ -765,6 +1144,23 @@ components:
           type: integer
           description: Идентификатор лекции
           default: 26
+        name:
+          type: string
+          description: Название лекции
+          default: Нотации BPMN, UML
+        dateTime:
+          type: string
+          description: Дата и время проведения лекции
+          default: "2024-10-10T18:00:00"
+
+    Lecture3:
+      type: object
+
+      properties:
+        lectureId:
+          type: integer
+          description: Идентификатор лекции
+          default: 26
         internshipId:
           type: integer
           description: Идентификатор стажировки
@@ -772,7 +1168,7 @@ components:
         managerId:
           type: integer
           description: Идентификатор Ментора
-          default: 2
+          default: 5
         name:
           type: string
           description: Название лекции
@@ -791,3 +1187,20 @@ components:
             type: string
             description: Ссылки на материалы к лекции
             default: https://disk.yandex/presentation
+
+    Users:
+      type: object
+
+      properties:
+        surname:
+          type: string
+          description: Фамилия сотрудника
+          default: Ящук
+        name:
+          type: string
+          description: Имя сотрудника
+          default: Юлия
+        middleNname:
+          type: string
+          description: Отчество сотрудника
+          default: Игоревна
