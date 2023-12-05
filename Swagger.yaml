@@ -743,7 +743,7 @@ components:
             type: string
             description: Добавление дополнительных полей в форму заявки
             default: Образование (ВУЗ)
-        manager:
+        managerInfo:
           type: object
           properties:
             surname:
