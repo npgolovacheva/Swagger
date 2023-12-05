@@ -45,7 +45,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-  /public/internship/{id}/additionalFields:
+  /public/additionalFields/internship/{id}:
     get:
       tags:
         - Стажировка
@@ -231,7 +231,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-  /intern/{id}/enroll:
+  /enroll/intern/{id}:
     put:
       tags:
         - Стажёры
@@ -252,7 +252,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-  /intern/{id}/sb/check:
+  /sb/check/intern/{id}:
     post:
       tags:
         - Стажёры
@@ -272,7 +272,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-  /intern/{id}/account:
+  /account/intern/{id}:
     post:
       tags:
         - Стажёры
@@ -318,7 +318,7 @@ paths:
                     description: Описание ошибки
                     default: Description of the error code
 
-  /intern/{id}/employment:
+  /employment/intern/{id}:
     post:
       tags:
         - Стажёры
@@ -428,7 +428,7 @@ paths:
                     description: Описание кода ошибки
                     default: password is incorrect
 
-  /internship/{internshipId}/intern:
+  /intern/internship/{internshipId}:
     get:
       tags:
         - Стажировка
@@ -494,7 +494,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-  /internship/{internshipId}/manager/mentor:
+  /manager/mentor/internship/{internshipId}:
     get:
       tags:
         - Руководящий персонал
@@ -539,7 +539,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-  /internship/{internshipId}/lecture:
+  /lecture/internship/{internshipId}:
     post:
       tags:
         - Лекции
@@ -617,7 +617,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-  /lecture/{lectureId}/materials:
+  /materials/lecture/{lectureId}:
     put:
       tags:
         - Лекции
@@ -669,9 +669,6 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-
-
-
 components:
   securitySchemes:
     Authorization:
@@ -682,7 +679,6 @@ components:
   schemas:
     PublicInternship1:
       type: object
-
       properties:
         id:
           type: integer
@@ -699,7 +695,6 @@ components:
 
     PublicInternship2:
       type: object
-
       properties:
         id:
           type: integer
@@ -724,7 +719,6 @@ components:
 
     Internship1:
       type: object
-
       properties:
         name:
           type: string
@@ -734,14 +728,15 @@ components:
           type: string
           description: Описание стажировки
           default: Стажировка по системному анализу
-        testTask:
-          type: string
-          description: Тестовое задание
-          default: Текст тестового задания
         internshipProgram:
           type: string
           description: Программа стажировки
           default: Текст программы стажировки
+        testTask:
+          type: string
+          description: Тестовое задание
+          default: Текст тестового задания
+
         additionalFields:
           type: array
           items:
@@ -751,10 +746,6 @@ components:
         manager:
           type: object
           properties:
-            internshipId:
-              type: integer
-              description: Идентификатор стажировки
-              default: 2
             surname:
               type: string
               description: Фамилия сотрудника
@@ -770,7 +761,6 @@ components:
 
     Internship2:
       type: object
-
       properties:
         id:
           type: integer
@@ -802,7 +792,6 @@ components:
 
     Internship3:
       type: object
-
       properties:
         internshipId:
           type: integer
@@ -846,7 +835,6 @@ components:
 
     Internship4:
       type: object
-
       properties:
         id:
           type: integer
@@ -867,7 +855,6 @@ components:
 
     PublicIntern:
       type: object
-
       properties:
         internshipId:
           type: integer
@@ -919,7 +906,6 @@ components:
 
     Intern:
       type: object
-
       properties:
         id:
           type: integer
@@ -1054,7 +1040,6 @@ components:
 
     StatusIntern:
       type: object
-
       properties:
         surname:
           type: string
@@ -1075,7 +1060,6 @@ components:
 
     Manager1:
       type: object
-
       properties:
         internshipId:
           type: integer
@@ -1096,7 +1080,6 @@ components:
 
     Manager2:
       type: object
-
       properties:
         managerId:
           type: integer
@@ -1117,7 +1100,6 @@ components:
 
     Lecture1:
       type: object
-
       properties:
         managerId:
           type: integer
@@ -1138,7 +1120,6 @@ components:
 
     Lecture2:
       type: object
-
       properties:
         lectureId:
           type: integer
@@ -1155,7 +1136,6 @@ components:
 
     Lecture3:
       type: object
-
       properties:
         lectureId:
           type: integer
@@ -1190,7 +1170,6 @@ components:
 
     Users:
       type: object
-
       properties:
         surname:
           type: string
