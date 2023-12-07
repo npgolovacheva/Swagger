@@ -872,7 +872,7 @@ components:
           description: Дата рождения Стажёра
           default: "1966-06-13"
         phoneNumber:
-          type: integer
+          type: string
           description: Номер телефона Стажёра
           default: 78005553535
         email:
@@ -959,7 +959,7 @@ components:
           description: Дата рождения Стажёра
           default: "1966-06-13"
         phoneNumber:
-          type: integer
+          type: string
           description: Номер телефона Стажёра
           default: 78005553535
         email:
