@@ -431,7 +431,7 @@ paths:
   /intern/internship/{internshipId}:
     get:
       tags:
-        - Стажировка
+        - Стажёры
       summary: Получить список Стажёров с определённой стажировки
       security:
         - Authorization: []
@@ -592,7 +592,6 @@ paths:
           description: Внутренняя ошибка сервера
 
 
-
   /lecture/{lectureId}:
     get:
       tags:
@@ -736,7 +735,6 @@ components:
           type: string
           description: Тестовое задание
           default: Текст тестового задания
-
         additionalFields:
           type: array
           items:
@@ -1053,6 +1051,14 @@ components:
           type: string
           description: Отчество Стажёра
           default: Яковлевич
+        internshipName:
+          type: string
+          description: Название стажировки
+          default: Системный анализ
+        completedTestTaskLink:
+          type: string
+          description: Ссылка на выполненное тестовое задание
+          default: ссылка
         status:
           type: string
           description: Статус Стажёра
