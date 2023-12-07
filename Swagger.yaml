@@ -181,6 +181,25 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
+  /intern:
+    get:
+      tags:
+        - Стажёры
+      summary: Получить список Стажёров
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Intern'
+        '500':
+          description: Внутренняя ошибка сервера
+
   /intern/{id}:
     get:
       tags:
@@ -202,32 +221,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Intern'
-        '500':
-          description: Внутренняя ошибка сервера
-
-  /intern/status/{status}:
-    get:
-      tags:
-        - Стажёры
-      summary: Получить список Стажёров с определённым статусом
-      security:
-        - Authorization: []
-      parameters:
-        - name: status
-          in: path
-          description: Статус Стажёра
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Успешный запрос
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/StatusIntern'
         '500':
           description: Внутренняя ошибка сервера
 
