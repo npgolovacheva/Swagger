@@ -914,19 +914,17 @@ components:
           type: string
           description: Отчество Стажёра
           default: Яковлевич
-        internships:
-          type: array
-          items:
-            type: object
-            properties:
-              internshipId:
-                type: integer
-                description: Идентификатор стажировки
-                default: 3
-              internshipName:
-                type: string
-                description: Название стажировки
-                default: Системный анализ
+        internship:
+          type: object
+          properties:
+            internshipId:
+              type: integer
+              description: Идентификатор стажировки
+              default: 3
+            internshipName:
+              type: string
+              description: Название стажировки
+              default: Системный анализ
         managerInfo:
           type: object
           properties:
