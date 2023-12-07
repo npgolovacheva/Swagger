@@ -1029,34 +1029,6 @@ components:
                 description: Комментарий Ментора по домашнему заданию
                 default: Всё решено корректно
 
-    StatusIntern:
-      type: object
-      properties:
-        surname:
-          type: string
-          description: Фамилия Стажёра
-          default: Перельман
-        name:
-          type: string
-          description: Имя Стажёра
-          default: Григорий
-        middleName:
-          type: string
-          description: Отчество Стажёра
-          default: Яковлевич
-        internshipName:
-          type: string
-          description: Название стажировки
-          default: Системный анализ
-        completedTestTaskLink:
-          type: string
-          description: Ссылка на выполненное тестовое задание
-          default: ссылка
-        status:
-          type: string
-          description: Статус Стажёра
-          default: ENROLLED
-
     Manager1:
       type: object
       properties:
@@ -1144,10 +1116,25 @@ components:
           type: integer
           description: Идентификатор стажировки
           default: 3
-        managerId:
-          type: integer
-          description: Идентификатор Ментора
-          default: 5
+        managerInfo:
+          type: object
+          properties:
+            managerId:
+              type: integer
+              description: Идентификатор Ментора
+              default: 5
+            surname:
+              type: string
+              description: Фамилия Ментора
+              default: Жданов
+            name:
+              type: string
+              description: Имя Ментора
+              default: Александр
+            middleName:
+              type: string
+              description: Отчество Ментора
+              default: Константинович
         name:
           type: string
           description: Название лекции
