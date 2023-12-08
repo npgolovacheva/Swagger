@@ -181,6 +181,25 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
+  /new/intern:
+    get:
+      tags:
+        - Стажёры
+      summary: Получить список заявок на стажировку
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NewIntern'
+        '500':
+          description: Внутренняя ошибка сервера
+
   /intern:
     get:
       tags:
@@ -895,6 +914,41 @@ components:
                 description: Дополнительная информация
                 default: ЛГУ (матмех)
 
+    NewIntern:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор Стажёра
+          default: 16
+        surname:
+          type: string
+          description: Фамилия Стажёра
+          default: Перельман
+        name:
+          type: string
+          description: Имя Стажёра
+          default: Григорий
+        middleName:
+          type: string
+          description: Отчество Стажёра
+          default: Яковлевич
+        internship:
+          type: object
+          properties:
+            internshipId:
+              type: integer
+              description: Идентификатор стажировки
+              default: 3
+            internshipName:
+              type: string
+              description: Название стажировки
+              default: Системный анализ
+        completedTestTaskLink:
+          type: string
+          description: Ссылка на выполненное тестовое задание
+          default: ссылка
+
     Intern:
       type: object
       properties:
@@ -1098,6 +1152,25 @@ components:
           type: string
           description: Дата и время проведения лекции
           default: "2024-10-10T18:00:00"
+        managerInfo:
+          type: object
+          properties:
+            managerId:
+              type: integer
+              description: Идентификатор Ментора
+              default: 5
+            surname:
+              type: string
+              description: Фамилия Ментора
+              default: Жданов
+            name:
+              type: string
+              description: Имя Ментора
+              default: Александр
+            middleName:
+              type: string
+              description: Отчество Ментора
+              default: Константинович
 
     Lecture3:
       type: object
