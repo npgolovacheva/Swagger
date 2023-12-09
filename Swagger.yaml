@@ -239,7 +239,24 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Intern'
+                $ref: '#/components/schemas/InternId'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /intern/profile:
+    get:
+      tags:
+        - Стажёры
+      summary: Получить профиль Стажёра
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternProfile'
         '500':
           description: Внутренняя ошибка сервера
 
@@ -329,6 +346,27 @@ paths:
                     type: string
                     description: Описание ошибки
                     default: Description of the error code
+
+  /reject/intern/{id}:
+    put:
+      tags:
+        - Стажёры
+      summary: Отклонить Стажёра
+      description: Стажёру отказывают в дальшем сотрудничестве
+      security:
+        - Authorization: []
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор Стажёра
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный запрос
+        '500':
+          description: Внутренняя ошибка сервера
 
   /employment/intern/{id}:
     post:
@@ -532,11 +570,11 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-  /manager/internship:
+  /internship/manager:
     get:
       tags:
         - Стажировка
-      summary: Получить список стажировок определённого Руководителя стажировки
+      summary: Получить данные по стажировке конкретного Руководителя стажировки
       security:
         - Authorization: []
       responses:
@@ -545,9 +583,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Internship4'
+                $ref: '#/components/schemas/Internship3'
         '500':
           description: Внутренняя ошибка сервера
 
@@ -826,6 +862,10 @@ components:
         managerInfo:
           type: object
           properties:
+            managerId:
+              type: integer
+              description: Идентификатор Ментора
+              default: 4
             surname:
               type: string
               description: Фамилия Руководителя стажировки
@@ -838,26 +878,6 @@ components:
               type: string
               description: Отчество Руководителя стажировки
               default: Игоревна
-        status:
-          type: string
-          description: Статус стажировки
-          default: Активная стажировка
-
-    Internship4:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Идентификатор стажировки
-          default: 3
-        name:
-          type: string
-          description: Название стажировки
-          default: Системный анализ
-        description:
-          type: string
-          description: Описание стажировки
-          default: Стажировка по системному анализу
         status:
           type: string
           description: Статус стажировки
@@ -998,10 +1018,68 @@ components:
               type: string
               description: Отчество Ментора
               default: Константинович
-        status:
+        statusSb:
           type: string
-          description: Статус Стажёра
-          default: STUDIES
+          description: Результат проверки Стажёра Службой безопасности
+          default: approved
+        descriptionSb:
+          type: string
+          description: Комментарий от Cлужбы безопасности
+          default: Всё хорошо, вопросов не имеется
+        mentorOpinion:
+          type: string
+          description: Заключение Ментора о Стажёре по итогам стажировки
+          default: Заключение Ментора о Стажёре по итогам стажировки
+
+    InternId:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор Стажёра
+          default: 16
+        surname:
+          type: string
+          description: Фамилия Стажёра
+          default: Перельман
+        name:
+          type: string
+          description: Имя Стажёра
+          default: Григорий
+        middleName:
+          type: string
+          description: Отчество Стажёра
+          default: Яковлевич
+        internship:
+          type: object
+          properties:
+            internshipId:
+              type: integer
+              description: Идентификатор стажировки
+              default: 3
+            internshipName:
+              type: string
+              description: Название стажировки
+              default: Системный анализ
+        managerInfo:
+          type: object
+          properties:
+            managerId:
+              type: integer
+              description: Идентификатор Ментора
+              default: 5
+            surname:
+              type: string
+              description: Фамилия Ментора
+              default: Жданов
+            name:
+              type: string
+              description: Имя Ментора
+              default: Александр
+            middleName:
+              type: string
+              description: Отчество Ментора
+              default: Константинович
         address:
           type: string
           description: Адрес прописки Стажёра
@@ -1013,7 +1091,7 @@ components:
         phoneNumber:
           type: string
           description: Номер телефона Стажёра
-          default: 78005553535
+          default: "78005553535"
         email:
           type: string
           description: Почта Стажёра
@@ -1041,41 +1119,87 @@ components:
               meaning:
                 description: Дополнительная информация
                 default: ЛГУ (матмех)
-        mentorOpinion:
+
+    InternProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор Стажёра
+          default: 16
+        surname:
           type: string
-          description: Заключение Ментора о Стажёре по итогам стажировки
-          default: Заключение Ментора о Стажёре по итогам стажировки
-        homeworks:
+          description: Фамилия Стажёра
+          default: Перельман
+        name:
+          type: string
+          description: Имя Стажёра
+          default: Григорий
+        middleName:
+          type: string
+          description: Отчество Стажёра
+          default: Яковлевич
+        internship:
+          type: object
+          properties:
+            internshipId:
+              type: integer
+              description: Идентификатор стажировки
+              default: 3
+            internshipName:
+              type: string
+              description: Название стажировки
+              default: Системный анализ
+        managerInfo:
+          type: object
+          properties:
+            managerId:
+              type: integer
+              description: Идентификатор Ментора
+              default: 5
+            surname:
+              type: string
+              description: Фамилия Ментора
+              default: Жданов
+            name:
+              type: string
+              description: Имя Ментора
+              default: Александр
+            middleName:
+              type: string
+              description: Отчество Ментора
+              default: Константинович
+        address:
+          type: string
+          description: Адрес прописки Стажёра
+          default: Санкт-Петербург
+        birthDate:
+          type: string
+          description: Дата рождения Стажёра
+          default: "1966-06-13"
+        phoneNumber:
+          type: string
+          description: Номер телефона Стажёра
+          default: "78005553535"
+        email:
+          type: string
+          description: Почта Стажёра
+          default: gperelman@mail.ru
+        completedTestTaskLink:
+          type: string
+          description: Ссылка на выполненное тестовое задание
+          default: ссылка
+        additionalFields:
           type: array
           items:
             type: object
             properties:
-              homeworkId:
-                type: integer
-                description: Идентификатор стажировки
-                default: 4
-              homeworkTask:
-                type: string
-                description: Текст домашнего задания
-                default: Текст домашнего задания
-              homeworkLinks:
-                type: array
-                items:
-                  type: object
-                  description: Приложения к домашнему заданию
-                  default: https://disk.yandex/presentation2
-              completedHomeworkLink:
-                type: string
-                description: Ссылка на выполненное домашнее задание
-                default: Ссылка
-              grade:
-                type: integer
-                description: Оценка за домашнее задание
-                default: 5
-              note:
-                type: string
-                description: Комментарий Ментора по домашнему заданию
-                default: Всё решено корректно
+              name:
+                description: Добавление дополнительных полей в форму заявки
+                default: Образование (ВУЗ)
+              meaning:
+                description: Дополнительная информация
+                default: ЛГУ (матмех)
 
     Manager1:
       type: object
@@ -1132,7 +1256,7 @@ components:
           type: string
           description: Дата и время проведения лекции
           default: "2024-10-10T18:00:00"
-        meeting_location:
+        meetingLocation:
           type: string
           description: Место проведения лекции (ссылка)
           default: Ссылка
@@ -1210,7 +1334,7 @@ components:
           type: string
           description: Дата и время проведения лекции
           default: "2024-10-10T18:00:00"
-        meeting_location:
+        meetingLocation:
           type: string
           description: Место проведения лекции (ссылка)
           default: Ссылка
