@@ -260,6 +260,33 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
+  /intern/{internId}/manager/{managerId}:
+    put:
+      tags:
+        - Стажёры
+      summary: Назначить Стажёру Ментора
+      description: Руководитель стажировки назначает Стажёру Ментора
+      security:
+        - Authorization: []
+      parameters:
+        - name: internId
+          in: path
+          description: Идентификатор Стажёра
+          required: true
+          schema:
+            type: integer
+        - name: managerId
+          in: path
+          description: Идентификатор Ментора
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+
   /enroll/intern/{id}:
     put:
       tags:
